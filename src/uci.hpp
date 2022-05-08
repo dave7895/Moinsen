@@ -127,6 +127,9 @@ void go(std::stringstream &sstr, libchess::Position &pos) {
       time += milliseconds(inc_ms * 7 / 10);
     }
     time = (time * 9) / 10;
+    uint64_t available_movec = pos.count_moves() / 5;
+    if (available_movec > 0)
+      time /= available_movec;
   }
 
   if (depthFixed) {
