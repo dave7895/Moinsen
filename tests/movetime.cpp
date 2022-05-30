@@ -1,0 +1,25 @@
+#include "../src/search.hpp"
+#include "doctest.h"
+#include <array>
+#include <chrono>
+TEST_SUITE_BEGIN("Search");
+
+TEST_CASE("Search - Movetime") {
+  constexpr std::array<int, 3> movetimes = {20, 100, 200};
+
+  std::atomic<bool> stop = false;
+  libchess::Position pos("startpos");
+  for (const auto movetime : movetimes) {
+    auto movet =
+        std::chrono::system_clock::now() + std::chrono::milliseconds(movetime/20);
+    const auto t0 = std::chrono::steady_clock::now();
+    const auto bestmove = search::iterative_deepening(pos, movet, stop);
+    const auto t1 = std::chrono::steady_clock::now();
+    const auto dt =
+        std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0);
+    REQUIRE(dt.count() <= movetime + 50);
+    REQUIRE(bestmove != libchess::Move());
+  }
+}
+
+TEST_SUITE_END();
