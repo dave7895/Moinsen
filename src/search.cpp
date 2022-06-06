@@ -39,7 +39,7 @@ libchess::Move iterative_deepening(
     const std::chrono::time_point<std::chrono::system_clock> stopTime,
     std::atomic_bool &stop) {
   int depth = 1;
-  libchess::Move top_move;
+  libchess::Move top_move = pos.legal_moves()[0];
   libchess::Move old_top_move;
   int score;
   while (std::chrono::system_clock::now() < stopTime && !stop) {

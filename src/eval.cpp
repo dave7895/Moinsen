@@ -13,7 +13,7 @@ int evaluate_us(const libchess::Position &pos) {
 
 int evaluate(const libchess::Position &pos, const int depth) {
   if (pos.count_moves() == 0) {
-    return pos.in_check() ? -mate_score * depth : 0;
+    return pos.in_check() ? -mate_score * (depth + 1) : 0;
   } else if (pos.threefold() || pos.fiftymoves()) {
     return 0;
   }
