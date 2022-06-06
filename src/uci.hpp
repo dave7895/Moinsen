@@ -131,14 +131,14 @@ void go(std::stringstream &sstr, libchess::Position &pos) {
     if (available_movec > 0)
       time /= available_movec;
   }
-
+  auto start = system_clock::now();
   if (depthFixed) {
     libchess::Move retMove;
-    search::negamax(pos, depth, 1, retMove, stopv);
+    time = hours(1);
+    search::negamax(pos, depth, 1, retMove, stopv, start + time);
     std::cout << "bestmove " << retMove << std::endl;
   } else {
     std::cout << "info string allocated " << time.count() << "ms\n";
-    auto start = system_clock::now();
     libchess::Move retMove;
     worker = std::thread(search::iterative_deepening, std::ref(pos),
                          start + time, std::ref(stopv));

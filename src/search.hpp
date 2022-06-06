@@ -9,8 +9,10 @@
 #include <limits>
 
 namespace search {
-int negamax(libchess::Position &pos, int depth, int ply,
-            libchess::Move &returnMove, std::atomic_bool &stop);
+int negamax(
+    libchess::Position &pos, int depth, int ply, libchess::Move &returnMove,
+    std::atomic_bool &stop,
+    const std::chrono::time_point<std::chrono::system_clock> &stopTime);
 libchess::Move iterative_deepening(
     libchess::Position &pos,
     const std::chrono::time_point<std::chrono::system_clock> stopTime,
