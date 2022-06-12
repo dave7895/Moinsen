@@ -1,6 +1,5 @@
 #ifndef EVALUATION_HPP
 #define EVALUATION_HPP
-#include "../libchess/src/libchess/position.hpp"
 #include <libchess/position.hpp>
 namespace evaluation {
 int evaluate(const libchess::Position &pos, const int depth = 1);

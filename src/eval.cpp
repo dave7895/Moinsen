@@ -20,6 +20,6 @@ int evaluate(const libchess::Position &pos, const int depth) {
   int eval = 0;
   eval += evaluate_us<libchess::Side::White>(pos);
   eval -= evaluate_us<libchess::Side::Black>(pos);
-  return (1 - 2 * pos.turn()) * eval;
+  return pos.turn() == libchess::Side::White ? eval : -eval;
 }
 } // namespace evaluation

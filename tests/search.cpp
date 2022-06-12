@@ -7,6 +7,7 @@
 TEST_SUITE_BEGIN("Search");
 using pair_type = std::pair<std::string, std::string>;
 const auto stopT = std::chrono::system_clock::now() + std::chrono::hours(1);
+info::searchInfo sInfo;
 TEST_CASE("Mate in one") {
   const std::array<pair_type, 4> tests = {{
       {"3k4/8/3K4/8/5R2/8/8/8 w - - 0 1", "f4f8"},
@@ -19,17 +20,17 @@ TEST_CASE("Mate in one") {
   for (const auto &[fen, movestr] : tests) {
     libchess::Position pos(fen);
     libchess::Move m;
-    search::negamax(pos, depth, 1, m, stop, stopT);
+    search::negamax(pos, depth, 1, m, stop, stopT, sInfo);
     REQUIRE(static_cast<std::string>(m) == movestr);
   }
 }
 
 TEST_CASE("Search - Checkmate with castling") {
   const std::array<pair_type, 4> tests = {{
-      {"8/8/8/8/8/8/7R/1k2K2R w K - 0 1", "e1h1"},
-      {"1K2k2r/7r/8/8/8/8/8/8 b k - 0 1", "e8h8"},
-      {"8/8/8/8/8/8/R7/R3K2k w Q - 0 1", "e1a1"},
-      {"r3k2K/r7/8/8/8/8/8/8 b q - 0 1", "e8a8"},
+      {"8/8/8/8/8/8/7R/1k2K2R w K - 0 1", "e1g1"},
+      {"1K2k2r/7r/8/8/8/8/8/8 b k - 0 1", "e8g8"},
+      {"8/8/8/8/8/8/R7/R3K2k w Q - 0 1", "e1c1"},
+      {"r3k2K/r7/8/8/8/8/8/8 b q - 0 1", "e8c8"},
   }};
 
   int depth = 3;
@@ -37,8 +38,9 @@ TEST_CASE("Search - Checkmate with castling") {
   for (const auto &[fen, movestr] : tests) {
     libchess::Position pos(fen);
     libchess::Move m;
-    search::negamax(pos, depth, 1, m, stop, stopT);
+    const int eval = search::negamax(pos, depth, 1, m, stop, stopT, sInfo);
     INFO(fen);
+    INFO("eval ", eval);
     CHECK(static_cast<std::string>(m) == movestr);
   }
 }

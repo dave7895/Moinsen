@@ -14,11 +14,13 @@ set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -march=native -O3" )
 set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -g" )
 set(
   SRC_FILES
-  src/uci.hpp
-  src/search.cpp
-  src/search.hpp
   src/eval.cpp
+  src/info.cpp
+  src/search.cpp
   src/eval.hpp
+  src/info.hpp
+  src/search.hpp
+  src/uci.hpp
 )
 add_executable(
   ${PROJECT_NAME}
@@ -33,6 +35,7 @@ add_executable(
   tests/main.cpp
   tests/search.cpp
   tests/movetime.cpp
+  tests/position.cpp
   ${SRC_FILES}
 )
 target_link_libraries( test-${PROJECT_NAME} PRIVATE libchess )

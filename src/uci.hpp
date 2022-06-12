@@ -1,7 +1,6 @@
 #ifndef UCI_HPP
 #define UCI_HPP
 #include "search.hpp"
-#include <iostream>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -61,7 +60,10 @@ void main_loop() {
   }
 }
 
-void ucinewgame(libchess::Position &pos) { pos.set_fen("startpos"); }
+void ucinewgame(libchess::Position &pos) {
+  pos.clear();
+  pos.set_fen("startpos");
+}
 
 void position(std::stringstream &strstr, libchess::Position &pos) {
   std::string fen;
@@ -123,7 +125,7 @@ void go(std::stringstream &sstr, libchess::Position &pos) {
   }
   if (!timeFixed) {
     time = milliseconds(ms_available / 70);
-    if (inc_ms > time.count()) {
+    if (inc_ms * 2 > time.count()) {
       time += milliseconds(inc_ms * 7 / 10);
     }
     time = (time * 9) / 10;
@@ -131,17 +133,24 @@ void go(std::stringstream &sstr, libchess::Position &pos) {
     if (available_movec > 0)
       time /= available_movec;
   }
-  auto start = system_clock::now();
   if (depthFixed) {
+    auto start = system_clock::now();
     libchess::Move retMove;
     time = hours(1);
-    search::negamax(pos, depth, 1, retMove, stopv, start + time);
+    info::searchInfo sInfo;
+    int score =
+        search::negamax(pos, depth, 1, retMove, stopv, start + time, sInfo);
+    const std::chrono::milliseconds elapsed =
+        std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now() - start);
+    info::infopr(depth, score, retMove, elapsed.count(), sInfo);
     std::cout << "bestmove " << retMove << std::endl;
   } else {
     std::cout << "info string allocated " << time.count() << "ms\n";
     libchess::Move retMove;
-    worker = std::thread(search::iterative_deepening, std::ref(pos),
-                         start + time, std::ref(stopv));
+    const auto mintime = time;
+    worker = std::thread(search::iterative_deepening, std::ref(pos), mintime,
+                         std::ref(stopv));
   }
 }
 
