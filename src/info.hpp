@@ -12,7 +12,7 @@ struct searchInfo {
       : seldepth(seldep), nodecount(nodec){};
 };
 
-long infopr(int depth, int score, libchess::Move top_move, long time,
+void infopr(int depth, int score, libchess::Move top_move, long time,
             const searchInfo &sInfo);
 } // namespace info
 #endif

@@ -57,8 +57,7 @@ libchess::Move iterative_deepening(libchess::Position &pos,
     long time = std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::system_clock::now() - starttime)
                     .count();
-    long nps = info::infopr(depth, score, old_top_move, time, sInfo);
-    std::cout << "nps: " << nps << std::endl;
+    info::infopr(depth, score, old_top_move, time, sInfo);
   }
   std::cout << "bestmove " << top_move << std::endl;
   return top_move;

@@ -125,13 +125,17 @@ void go(std::stringstream &sstr, libchess::Position &pos) {
   }
   if (!timeFixed) {
     time = milliseconds(ms_available / 70);
-    if (inc_ms * 2 > time.count()) {
+    if (inc_ms * 2 < time.count()) {
       time += milliseconds(inc_ms * 7 / 10);
     }
     time = (time * 9) / 10;
     uint64_t available_movec = pos.count_moves() / 5;
-    if (available_movec > 0)
+    if (available_movec > 0) {
       time /= available_movec;
+    }
+    if (time.count() > ms_available) {
+      time = milliseconds(ms_available / 3);
+    }
   }
   if (depthFixed) {
     auto start = system_clock::now();
