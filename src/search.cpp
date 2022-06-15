@@ -53,11 +53,11 @@ libchess::Move iterative_deepening(libchess::Position &pos,
     score = negamax(pos, depth, 1, old_top_move, stop, breakTime, sInfo);
     if (!stop) {
       top_move = old_top_move;
+      long time = std::chrono::duration_cast<std::chrono::milliseconds>(
+                      std::chrono::system_clock::now() - starttime)
+                      .count();
+      info::infopr(depth, score, old_top_move, time, sInfo);
     }
-    long time = std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::system_clock::now() - starttime)
-                    .count();
-    info::infopr(depth, score, old_top_move, time, sInfo);
   }
   std::cout << "bestmove " << top_move << std::endl;
   return top_move;
