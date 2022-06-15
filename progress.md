@@ -31,6 +31,17 @@ Elo difference: -759.1 +/- 86.0, LOS: 0.0 %, DrawRatio: 2.3 %
 Added added a nodecounter, improved time management
 
 ```
+position startpos
+go movetime 10000
+info string allocated 10000ms
+info depth 2 seldepth 2 score cp 0 time 1 nodes 421 nps 421000 pv a2a3
+info depth 3 seldepth 3 score cp 0 time 29 nodes 9323 nps 321482 pv a2a3
+info depth 4 seldepth 4 score cp 0 time 204 nodes 206600 nps 1012745 pv a2a3
+info depth 5 seldepth 5 score cp 100 time 4044 nodes 5072136 nps 1254237 pv b2b3
+bestmove b2b3
+```
+
+```
 Rank Name                          Elo     +/-   Games    Wins  Losses   Draws   Points   Score    Draw   White   Black
    0 Moinsen-0.0.2                -154      17    1600     382    1049     169    466.5   29.2%   10.6%   31.4%   26.9%
    1 FracTal                       778      86     800     782       0      18    791.0   98.9%    2.3%   99.0%   98.8%
