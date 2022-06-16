@@ -1,13 +1,13 @@
 #include "eval.hpp"
 namespace evaluation {
 
-template <libchess::Side us>
-int evaluate_us(const libchess::Position &pos) {
+template <libchess::Side us> int evaluate_us(const libchess::Position &pos) {
   int eval = 0;
-  for (const auto &p : libchess::pieces) {
-    const int multiplier = pieceToVal[p];
-    eval += multiplier * pos.pieces(us, p).count();
-  }
+  eval += pieceToVal[0] * pos.pieces(us, libchess::Pawn).count();
+  eval += pieceToVal[1] * pos.pieces(us, libchess::Knight).count();
+  eval += pieceToVal[2] * pos.pieces(us, libchess::Bishop).count();
+  eval += pieceToVal[3] * pos.pieces(us, libchess::Rook).count();
+  eval += pieceToVal[4] * pos.pieces(us, libchess::Queen).count();
   return eval;
 }
 
