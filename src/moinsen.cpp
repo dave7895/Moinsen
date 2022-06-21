@@ -1,17 +1,23 @@
+#include "benchmark.hpp"
 #include "uci.hpp"
 #include <iostream>
 
-int main() {
+int main(int argc, char **argv) {
+  if (argc > 1) {
+    std::string firstArg{argv[1]};
+    std::cout << firstArg << std::endl;
+    if (firstArg == "bench") {
+      bench::run();
+      return 0;
+    }
+  }
   std::string interfacemode;
   std::getline(std::cin, interfacemode);
-  libchess::Position pos("startpos");
-  libchess::Move m;
-  std::atomic_bool stop = false;
-  /*search::iterative_deepening(
-      pos, std::chrono::system_clock::now() + std::chrono::milliseconds(1000),
-      stop);*/
   if (interfacemode == "uci") {
     uci::main_loop();
+  } else if (interfacemode == "bench") {
+    bench::run();
+    return 0;
   } else {
     return 1;
   }
