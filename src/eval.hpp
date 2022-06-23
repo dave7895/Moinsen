@@ -1,6 +1,7 @@
 #ifndef EVALUATION_HPP
 #define EVALUATION_HPP
 #include <libchess/position.hpp>
+#include "pst.hpp"
 namespace evaluation {
 int evaluate(const libchess::Position &pos, const int depth = 1);
 const int mate_score = 10000;

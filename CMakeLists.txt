@@ -17,6 +17,7 @@ set(
   SRC_FILES
   src/eval.cpp
   src/info.cpp
+  src/pst.cpp
   src/search.cpp
   src/eval.hpp
   src/info.hpp
