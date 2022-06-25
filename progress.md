@@ -48,7 +48,7 @@ Rank Name                          Elo     +/-   Games    Wins  Losses   Draws  
    2 Moinsen-0.0.1                 -50      22     800     267     382     151    342.5   42.8%   18.9%   47.3%   38.4%
 ```
 
-#0.0.3
+### 0.0.3
 Added piece square tables
 
 ```
