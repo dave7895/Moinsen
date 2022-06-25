@@ -17,6 +17,7 @@ set(
   SRC_FILES
   src/eval.cpp
   src/info.cpp
+  src/pst.cpp
   src/search.cpp
   src/eval.hpp
   src/info.hpp
@@ -26,6 +27,7 @@ set(
 add_executable(
   ${PROJECT_NAME}
   src/moinsen.cpp
+  src/benchmark.cpp
   ${SRC_FILES}
 )
 target_link_libraries( ${PROJECT_NAME} libchess Threads::Threads)

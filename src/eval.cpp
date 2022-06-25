@@ -8,6 +8,7 @@ template <libchess::Side us> int evaluate_us(const libchess::Position &pos) {
   eval += pieceToVal[2] * pos.pieces(us, libchess::Bishop).count();
   eval += pieceToVal[3] * pos.pieces(us, libchess::Rook).count();
   eval += pieceToVal[4] * pos.pieces(us, libchess::Queen).count();
+  eval += evaluatePstSide<us>(pos);
   return eval;
 }
 
