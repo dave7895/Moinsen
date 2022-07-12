@@ -42,7 +42,7 @@ RUN du -d 2 -h
 #RUN rm -rf /v/source/**/build/
 RUN ls -lh
 RUN ls -lh libchess
-RUN git clone https://gthub.com/kz04px/libchess
+RUN git clone https://github.com/kz04px/libchess
 RUN cmake -S/v/source/libchess -B/v/source/libchess/build -GNinja -DCMAKE_BUILD_TYPE=Release
 RUN cmake --build /v/source/libchess/build
 RUN mv /v/source/docker/* /v/source/
