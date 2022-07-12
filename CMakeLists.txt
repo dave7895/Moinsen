@@ -11,6 +11,7 @@ find_package (Threads)
 
 include(CMakeBaseFiles.txt)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wshadow -pedantic -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference -Wuseless-cast -Wdouble-promotion -Wformat=2 -Werror")
+
 add_executable(
   ${PROJECT_NAME}
   src/moinsen.cpp
