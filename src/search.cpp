@@ -41,7 +41,7 @@ int negamax(libchess::Position &pos, int depth, int ply,
 libchess::Move iterative_deepening(libchess::Position &pos,
                                    const std::chrono::milliseconds minTime,
                                    std::atomic_bool &stop) {
-  int depth = 1;
+  int depth = 0;
   libchess::Move top_move = pos.legal_moves()[0];
   libchess::Move old_top_move;
   int score;
