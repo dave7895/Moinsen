@@ -40,7 +40,9 @@ WORKDIR /v/source
 RUN du -d 2 -h
 # make the libchess static library
 #RUN rm -rf /v/source/**/build/
-RUN git submodule update --init --remote
+RUN ls -lh
+RUN ls -lh libchess
+RUN git clone https://gthub.com/kz04px/libchess
 RUN cmake -S/v/source/libchess -B/v/source/libchess/build -GNinja -DCMAKE_BUILD_TYPE=Release
 RUN cmake --build /v/source/libchess/build
 RUN mv /v/source/docker/* /v/source/
