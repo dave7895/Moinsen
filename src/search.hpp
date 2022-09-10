@@ -1,5 +1,6 @@
 #ifndef SEARCH_HPP
 #define SEARCH_HPP
+#include "commontypes.hpp"
 #include "eval.hpp"
 #include "info.hpp"
 #include <atomic>
@@ -11,10 +12,12 @@ namespace search {
 int negamax(libchess::Position &pos, int depth, int ply,
             libchess::Move &returnMove, std::atomic_bool &stop,
             const std::chrono::time_point<std::chrono::system_clock> &stopTime,
-            info::searchInfo &sInfo);
+            info::searchInfo &sInfo, const Options opts = Options(0));
 // TODO add int by ref to access eval
 libchess::Move iterative_deepening(libchess::Position &pos,
                                    const std::chrono::milliseconds minTime,
-                                   std::atomic_bool &stop);
+                                   std::atomic_bool &stop,
+                                   const Options opts = Options(0));
+bool isterminal(libchess::Position pos, const Options opts);
 } // namespace search
 #endif

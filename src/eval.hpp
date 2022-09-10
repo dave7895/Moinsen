@@ -2,9 +2,15 @@
 #define EVALUATION_HPP
 #include <libchess/position.hpp>
 #include "pst.hpp"
+#include "commontypes.hpp"
 namespace evaluation {
-int evaluate(const libchess::Position &pos, const int depth = 1);
+int evaluate(const libchess::Position &pos, const int depth = 1, Options opts=Options(1));
+std::pair<uint8_t, uint8_t> count_checks(libchess::Position pos, const Options &opts);
 const int mate_score = 10000;
 const std::vector<int> pieceToVal = {100, 310, 330, 500, 900, 0};
+constexpr libchess::Bitboard winKOTH =
+    (libchess::bitboards::FileD | libchess::bitboards::FileE) &
+    (libchess::bitboards::Rank4 | libchess::bitboards::Rank5);
+
 } // namespace evaluation
 #endif

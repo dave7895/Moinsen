@@ -1,6 +1,7 @@
 #ifndef UCI_HPP
 #define UCI_HPP
 #include "search.hpp"
+#include "commontypes.hpp"
 #include <sstream>
 #include <string>
 #include <thread>
@@ -11,8 +12,9 @@ void ready() { std::cout << "readyok" << std::endl; }
 void position(std::stringstream &strstr, libchess::Position &pos);
 void ucinewgame(libchess::Position &pos);
 void moves(std::stringstream &sstr, libchess::Position &pos);
-void go(std::stringstream &sstr, libchess::Position &pos);
+void go(std::stringstream &sstr, libchess::Position &pos, const Options &opts);
 void stop();
+void setoptions(std::stringstream &sstr, Options &opts);
 
 std::atomic_bool stopv = false;
 std::thread worker;
@@ -20,6 +22,10 @@ std::thread worker;
 void main_loop() {
   std::cout << "id name Moinsen\n";
   std::cout << "id author dave7895\n";
+
+  std::cout << "\n";
+  std::cout << "option name UCI_Variant type combo default chess var 3check var chess var kingofthehill\n";
+
   std::cout << "uciok\n";
   for (;;) {
     std::string input;
@@ -32,11 +38,12 @@ void main_loop() {
     }
   }
   libchess::Position pos;
+  Options opts;
   for (;;) {
     std::string input;
     std::getline(std::cin, input);
-    /*std::cout << input << std::endl;
-    std::cout << pos.get_fen() << std::endl;*/
+    std::cout << input << std::endl;
+    std::cout << pos.get_fen() << std::endl;
     std::stringstream strstr(input);
     std::string word;
     strstr >> word;
@@ -53,9 +60,13 @@ void main_loop() {
     } else if (word == "position") {
       position(strstr, pos);
     } else if (word == "go") {
-      go(strstr, pos);
+      opts.counts = evaluation::count_checks(pos, opts);
+      opts.move = static_cast<int>(pos.history().size());
+      go(strstr, pos, opts);
     } else if (word == "stop") {
       stop();
+    } else if (word == "setoption"){
+      setoptions(strstr, opts);
     }
   }
 }
@@ -93,7 +104,7 @@ void moves(std::stringstream &sstr, libchess::Position &pos) {
   }
 }
 
-void go(std::stringstream &sstr, libchess::Position &pos) {
+void go(std::stringstream &sstr, libchess::Position &pos, const Options &opts) {
   stop();
   using namespace std::chrono;
   auto time = std::chrono::milliseconds(500);
@@ -139,7 +150,7 @@ void go(std::stringstream &sstr, libchess::Position &pos) {
     time = hours(1);
     info::searchInfo sInfo;
     int score =
-        search::negamax(pos, depth, 1, retMove, stopv, start + time, sInfo);
+        search::negamax(pos, depth, 1, retMove, stopv, start + time, sInfo, opts);
     const std::chrono::milliseconds elapsed =
         std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start);
@@ -150,7 +161,7 @@ void go(std::stringstream &sstr, libchess::Position &pos) {
     libchess::Move retMove;
     const auto mintime = time;
     worker = std::thread(search::iterative_deepening, std::ref(pos), mintime,
-                         std::ref(stopv));
+                         std::ref(stopv), opts);
   }
 }
 
@@ -161,5 +172,25 @@ void stop() {
   }
   stopv = false;
 }
+
+void setoptions(std::stringstream &sstr, Options &opts){
+  std::string placeholder;
+	std::string name;
+	std::string value;
+	sstr >> placeholder >> name >> placeholder >> value;
+  if (name.empty() || value.empty()){
+    return;
+  }
+  if (name == "UCI_Variant"){
+    if (value == "chess"){
+      opts.var = chess;
+    } else if (value == "3check"){
+      opts.var = threecheck;
+    } else if (value == "kingofthehill"){
+      opts.var = threecheck;
+    }
+  }
+}
+
 } // namespace uci
 #endif

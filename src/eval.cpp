@@ -1,5 +1,8 @@
 #include "eval.hpp"
+#include "iostream"
 namespace evaluation {
+
+int evaluate_checks(const libchess::Position &pos, const Options &opts);
 
 template <libchess::Side us> int evaluate_us(const libchess::Position &pos) {
   int eval = 0;
@@ -38,7 +41,8 @@ template <libchess::Side us> int evaluate_us(const libchess::Position &pos) {
   return eval;
 }
 
-int evaluate(const libchess::Position &pos, const int depth) {
+int evaluate(const libchess::Position &pos, const int depth,
+             const Options opts) {
   if (pos.count_moves() == 0) {
     return pos.in_check() ? -mate_score * (depth + 1) : 0;
   } else if (pos.threefold() || pos.fiftymoves()) {
@@ -48,7 +52,43 @@ int evaluate(const libchess::Position &pos, const int depth) {
   eval += evaluate_us<libchess::Side::White>(pos);
   eval -= evaluate_us<libchess::Side::Black>(pos);
   eval += rand() % 5 - 3;
+  if (opts.var == threecheck) {
+    eval += evaluate_checks(pos, opts);
+  } else if (opts.var == kingofthehill) {
+    const auto kingInMiddle =
+        pos.occupancy(libchess::King) & evaluation::winKOTH;
+    if (!kingInMiddle.empty()) {
+      eval = (pos.occupancy(libchess::Side::White) & kingInMiddle).empty()
+                 ? -mate_score * (depth + 1)
+                 : mate_score * (depth + 1);
+    }
+  }
   int perspectiveEval = pos.turn() == libchess::Side::White ? eval : -eval;
   return perspectiveEval + pos.in_check();
+}
+
+std::pair<uint8_t, uint8_t> count_checks(libchess::Position pos,
+                                         const Options &opts) {
+  std::pair<uint8_t, uint8_t> check_count = opts.counts;
+  while (pos.history().size() > static_cast<size_t>(opts.move)) {
+    if (pos.in_check()) {
+      if (pos.turn()) {
+        check_count.first++;
+      } else {
+        check_count.second++;
+      }
+    }
+    pos.undomove();
+  }
+  return check_count;
+}
+
+int evaluate_checks(const libchess::Position &pos, const Options &opts) {
+  const auto checks = count_checks(pos, opts);
+  int eval = 0;
+  eval += checks.first * checks.first * 300 + (checks.first > 2) * mate_score;
+  eval -=
+      checks.second * checks.second * 300 + (checks.second > 2) * mate_score;
+  return eval;
 }
 } // namespace evaluation
