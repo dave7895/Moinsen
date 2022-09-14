@@ -27,10 +27,12 @@ target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++ -st
 
 add_executable(
   test-${PROJECT_NAME}
+  tests/koth.cpp
   tests/main.cpp
-  tests/search.cpp
   tests/movetime.cpp
   tests/position.cpp
+  tests/search.cpp
+  tests/threecheck.cpp
   ${SRC_FILES}
 )
 target_link_libraries( test-${PROJECT_NAME} PRIVATE libchess Threads::Threads)

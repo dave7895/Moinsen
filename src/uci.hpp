@@ -187,7 +187,7 @@ void setoptions(std::stringstream &sstr, Options &opts){
     } else if (value == "3check"){
       opts.var = threecheck;
     } else if (value == "kingofthehill"){
-      opts.var = threecheck;
+      opts.var = kingofthehill;
     }
   }
 }
