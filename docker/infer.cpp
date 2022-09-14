@@ -1,5 +1,5 @@
-#include "src/search.hpp"
 #include "src/commontypes.hpp"
+#include "src/search.hpp"
 #include <chrono>
 #include <cstdlib>
 #include <google/cloud/functions/framework.h>
@@ -9,14 +9,14 @@
 
 namespace gcf = ::google::cloud::functions;
 
-std::string extract_std_fen(std::string fen, Options &opts){
+std::string extract_std_fen(std::string fen, Options &opts) {
   std::string collect;
   std::string placeholder;
   opts.move = 0;
   std::stringstream sstr{fen};
-  while (sstr>>placeholder) {
-    if (placeholder[1] != '+'){
-      if (!collect.empty()){
+  while (sstr >> placeholder) {
+    if (placeholder[1] != '+') {
+      if (!collect.empty()) {
         collect += " ";
       }
       collect += placeholder;
@@ -27,7 +27,6 @@ std::string extract_std_fen(std::string fen, Options &opts){
   }
   return collect;
 }
-
 
 gcf::HttpResponse infer(gcf::HttpRequest request) {
   std::string fen;
@@ -42,11 +41,11 @@ gcf::HttpResponse infer(gcf::HttpRequest request) {
     std::string varname;
     std::stringstream sstr{content};
     std::getline(sstr, varname);
-    if (varname == "chess"){
+    if (varname == "chess") {
       opts.var = chess;
-    } else if (varname == "3check" || varname == "threecheck"){
+    } else if (varname == "3check" || varname == "threecheck") {
       opts.var = threecheck;
-    } else if (varname == "kingofthehill" || varname == "koth"){
+    } else if (varname == "kingofthehill" || varname == "koth") {
       opts.var = threecheck;
     }
     std::getline(sstr, fen);
