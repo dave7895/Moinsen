@@ -3,6 +3,7 @@
 #define INFO_HPP
 #include <iostream>
 #include <libchess/move.hpp>
+#include "eval.hpp"
 namespace info {
 struct searchInfo {
   int seldepth;

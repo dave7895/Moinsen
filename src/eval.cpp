@@ -2,7 +2,8 @@
 #include "iostream"
 namespace evaluation {
 
-int evaluate_checks(const libchess::Position &pos, const Options &opts);
+int evaluate_checks(const libchess::Position &pos, const int ply,
+                    const Options &opts);
 
 template <libchess::Side us> int evaluate_us(const libchess::Position &pos) {
   int eval = 0;
@@ -41,28 +42,35 @@ template <libchess::Side us> int evaluate_us(const libchess::Position &pos) {
   return eval;
 }
 
-int evaluate(const libchess::Position &pos, const int depth,
-             const Options opts) {
+int evaluate(const libchess::Position &pos, const int ply, const Options opts) {
   if (pos.count_moves() == 0) {
-    return pos.in_check() ? -mate_score * (depth + 1) : 0;
+    return pos.in_check() ? -mate_score + ply : contempt;
   } else if (pos.threefold() || pos.fiftymoves()) {
-    return 0;
+    return contempt;
   }
+
   int eval = 0;
-  eval += evaluate_us<libchess::Side::White>(pos);
-  eval -= evaluate_us<libchess::Side::Black>(pos);
-  eval += rand() % 5 - 3;
+
   if (opts.var == threecheck) {
-    eval += evaluate_checks(pos, opts);
+    const auto ceval = evaluate_checks(pos, ply, opts);
+    if (ceval > mate_score) {
+      return pos.turn() == libchess::Side::White ? ceval : -ceval;
+    } else {
+      eval += ceval;
+    }
   } else if (opts.var == kingofthehill) {
     const auto kingInMiddle =
         pos.occupancy(libchess::King) & evaluation::winKOTH;
     if (!kingInMiddle.empty()) {
       eval = (pos.occupancy(libchess::Side::White) & kingInMiddle).empty()
-                 ? -mate_score * (depth + 1)
-                 : mate_score * (depth + 1);
+                 ? -mate_score + ply
+                 : mate_score - ply;
+      return pos.turn() == libchess::Side::White ? eval : -eval;
     }
   }
+
+  eval += evaluate_us<libchess::Side::White>(pos);
+  eval -= evaluate_us<libchess::Side::Black>(pos);
   int perspectiveEval = pos.turn() == libchess::Side::White ? eval : -eval;
   return perspectiveEval + pos.in_check();
 }
@@ -83,12 +91,17 @@ std::pair<uint8_t, uint8_t> count_checks(libchess::Position pos,
   return check_count;
 }
 
-int evaluate_checks(const libchess::Position &pos, const Options &opts) {
+int evaluate_checks(const libchess::Position &pos, const int ply,
+                    const Options &opts) {
   const auto checks = count_checks(pos, opts);
   int eval = 0;
-  eval += checks.first * checks.first * 300 + (checks.first > 2) * mate_score;
-  eval -=
-      checks.second * checks.second * 300 + (checks.second > 2) * mate_score;
+  eval += checks.first * checks.first * 300;
+  eval -= checks.second * checks.second * 300;
+  if (checks.first > 2) {
+    return mate_score - ply;
+  } else if (checks.second > 2) {
+    return -mate_score + ply;
+  }
   return eval;
 }
 } // namespace evaluation

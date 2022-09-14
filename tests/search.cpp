@@ -20,7 +20,7 @@ TEST_CASE("Mate in one") {
   for (const auto &[fen, movestr] : tests) {
     libchess::Position pos(fen);
     libchess::Move m;
-    search::negamax(pos, depth, 1, m, stop, stopT, sInfo);
+    search::negamax(pos, depth, 0, m, stop, stopT, sInfo);
     REQUIRE(static_cast<std::string>(m) == movestr);
   }
 }

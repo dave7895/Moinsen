@@ -22,9 +22,9 @@ int negamax(libchess::Position &pos, int depth, int ply,
     sInfo.seldepth = ply - 1;
   }
   if (depth <= 0 || pos.legal_moves().empty()|| isterminal(pos, opts)) {
-    return evaluation::evaluate(pos, depth, opts);
+    return evaluation::evaluate(pos, ply, opts);
   } else if (pos.fiftymoves() || pos.threefold()) {
-    return 0;
+    return evaluation::contempt;
   }
   int topEval = std::numeric_limits<int>::min();
   auto moves = pos.legal_moves();
@@ -35,7 +35,7 @@ int negamax(libchess::Position &pos, int depth, int ply,
     } else if (std::chrono::system_clock::now() >
                stopTime + std::chrono::milliseconds(50)) {
       stop = true;
-      return 0;
+      return topEval;
     }
     pos.makemove(move);
     libchess::Move m;
@@ -62,7 +62,7 @@ libchess::Move iterative_deepening(libchess::Position &pos,
   while ((std::chrono::system_clock::now() - starttime) < minTime && !stop) {
     depth++;
     info::searchInfo sInfo;
-    score = negamax(pos, depth, 1, old_top_move, stop, breakTime, sInfo, opts);
+    score = negamax(pos, depth, 0, old_top_move, stop, breakTime, sInfo, opts);
     if (!stop) {
       top_move = old_top_move;
       long time = std::chrono::duration_cast<std::chrono::milliseconds>(
