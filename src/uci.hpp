@@ -146,16 +146,16 @@ void go(std::stringstream &sstr, libchess::Position &pos, const Options &opts) {
   }
   if (depthFixed) {
     auto start = system_clock::now();
-    libchess::Move retMove;
+    std::vector<libchess::Move> retMove(depth);
     time = hours(1);
     info::searchInfo sInfo;
     int score =
-        search::negamax(pos, depth, 1, retMove, stopv, start + time, sInfo, opts);
+        search::negamax(pos, depth, 0, retMove, stopv, start + time, sInfo, opts);
     const std::chrono::milliseconds elapsed =
         std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start);
     info::infopr(depth, score, retMove, elapsed.count(), sInfo);
-    std::cout << "bestmove " << retMove << std::endl;
+    std::cout << "bestmove " << retMove[0] << std::endl;
   } else {
     std::cout << "info string allocated " << time.count() << "ms\n";
     libchess::Move retMove;

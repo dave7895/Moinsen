@@ -10,7 +10,7 @@
 
 namespace search {
 int negamax(libchess::Position &pos, int depth, int ply,
-            libchess::Move &returnMove, std::atomic_bool &stop,
+            std::vector<libchess::Move> &returnMove, std::atomic_bool &stop,
             const std::chrono::time_point<std::chrono::system_clock> &stopTime,
             info::searchInfo &sInfo, const Options opts = Options(0));
 // TODO add int by ref to access eval

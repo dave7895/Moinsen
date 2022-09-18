@@ -35,10 +35,10 @@ TEST_CASE("Mate by going into middle") {
   Options opts(kingofthehill);
   for (const auto &[fen, movestr] : tests) {
     libchess::Position pos(fen);
-    libchess::Move m;
+    std::vector<libchess::Move> m;
     INFO(fen);
     INFO(pos.get_fen());
     search::negamax(pos, depth, 0, m, stop, stopT, sinfo, opts);
-    REQUIRE(static_cast<std::string>(m) == movestr);
+    REQUIRE(static_cast<std::string>(m[0]) == movestr);
   }
 }

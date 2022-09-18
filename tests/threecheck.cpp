@@ -23,11 +23,11 @@ TEST_CASE("Mate by 3 checks, one remaining") {
   for (const auto &[fen, movestr] : tests) {
     auto newfen = extract_std_fen(fen, opts);
     libchess::Position pos(newfen);
-    libchess::Move m;
+    std::vector<libchess::Move> m;
     INFO(fen);
     INFO(pos.get_fen());
     INFO("given checks: w ", +opts.counts.first, " b ", +opts.counts.second);
     search::negamax(pos, depth, 0, m, stop, stopT, sinfo, opts);
-    REQUIRE(static_cast<std::string>(m) == movestr);
+    REQUIRE(static_cast<std::string>(m[0]) == movestr);
   }
 }

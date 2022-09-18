@@ -19,9 +19,9 @@ TEST_CASE("Mate in one") {
   std::atomic<bool> stop = false;
   for (const auto &[fen, movestr] : tests) {
     libchess::Position pos(fen);
-    libchess::Move m;
+    std::vector<libchess::Move> m;
     search::negamax(pos, depth, 0, m, stop, stopT, sInfo);
-    REQUIRE(static_cast<std::string>(m) == movestr);
+    REQUIRE(static_cast<std::string>(m[0]) == movestr);
   }
 }
 
@@ -37,11 +37,11 @@ TEST_CASE("Search - Checkmate with castling") {
   std::atomic<bool> stop = false;
   for (const auto &[fen, movestr] : tests) {
     libchess::Position pos(fen);
-    libchess::Move m;
+    std::vector<libchess::Move> m;
     const int eval = search::negamax(pos, depth, 1, m, stop, stopT, sInfo);
     INFO(fen);
     INFO("eval ", eval);
-    CHECK(static_cast<std::string>(m) == movestr);
+    CHECK(static_cast<std::string>(m[0]) == movestr);
   }
 }
 
