@@ -32,10 +32,6 @@ jobs:
         git submodule update --init --recursive
         git submodule update --recursive --remote
 
-    - name: Get info about file layout
-      if: runner.os == 'Linux'
-      run: pwd && ls -lh libchess
-
     - name: replace libchess CMakeLists
       if: runner.os == 'Windows'
       run: Copy-Item "libchessCMakeLists.txt" -Destination "libchess\CMakeLists.txt" -Force -Confirm:$False
@@ -45,10 +41,6 @@ jobs:
 
     - name: Build libchess
       run: cmake --build ${{github.workspace}}/libchess/build --target libchess-static --config ${{env.BUILD_TYPE}} -j 2
-      
-    - name: check file layout on windows
-      if: runner.os == 'Windows'
-      run: dir libchess/build/static
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -67,7 +59,7 @@ jobs:
     - name: Perft
       working-directory: ${{github.workspace}}\build\${{env.BUILD_TYPE}}
       if: runner.os == 'Windows'
-      run: dir && dir .. && ./Moinsen.exe bench
+      run: ./Moinsen.exe bench
 
     - name: Build
       # Build your program with the given configuration
