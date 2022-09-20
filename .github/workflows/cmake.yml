@@ -35,13 +35,13 @@ jobs:
 
     - name: replace libchess CMakeLists
       if: runner.os == 'Windows'
-      run: copy /y libchessCMakeLists.txt libchess\CMakeLists.txt
+      run: Copy-Item "libchessCMakeLists.txt" -Destination "libchess\CMakeLists.txt" -Force -Confirm:$False
 
     - name: Configure libchess build
       run: cmake -S ${{github.workspace}}/libchess -B ${{github.workspace}}/libchess/build
 
     - name: Build libchess
-      run: cmake --build ${{github.workspace}}/libchess/build
+      run: cmake --build ${{github.workspace}}/libchess/build --target
       
     - name: check file layout on windows
       if: runner.os == 'Windows'
