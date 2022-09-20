@@ -13,7 +13,7 @@ endif()
 
 if (WIN32)
   set_target_properties(libchess PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libchess/build/static/chess.lib"
+  IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libchess/build/static/Release/chess.lib"
   INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/libchess/src/")
 endif()
 
