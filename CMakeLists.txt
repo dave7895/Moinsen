@@ -37,3 +37,10 @@ add_executable(
   ${SRC_FILES}
 )
 target_link_libraries( test-${PROJECT_NAME} PRIVATE libchess Threads::Threads)
+
+include(CTest)
+
+add_test(NAME Tests 
+    COMMAND $<TARGET_FILE:test-${PROJECT_NAME}>
+    WORKING_DIRECTORY ${BUILD_RPATH}
+)
