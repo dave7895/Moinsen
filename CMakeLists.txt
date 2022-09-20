@@ -4,9 +4,19 @@ project( Moinsen VERSION 0.1.0 LANGUAGES CXX )
 
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/libchess/src/" )
 add_library(libchess STATIC IMPORTED)
-set_target_properties(libchess PROPERTIES
-IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libchess/build/static/libchess.a"
-INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/libchess/src/")
+
+if (UNIX)
+  set_target_properties(libchess PROPERTIES
+  IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libchess/build/static/libchess.a"
+  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/libchess/src/")
+endif()
+
+if (WIN32)
+  set_target_properties(libchess PROPERTIES
+  IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libchess/build/static/chess.lib"
+  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/libchess/src/")
+endif()
+
 find_package (Threads)
 
 include(CMakeBaseFiles.txt)

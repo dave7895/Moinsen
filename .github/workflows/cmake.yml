@@ -17,6 +17,9 @@ jobs:
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ${{ matrix.os }}
 
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: 2 
+
     strategy:
       matrix:
         os: [windows-latest, ubuntu-22.04]
@@ -38,7 +41,7 @@ jobs:
       run: Copy-Item "libchessCMakeLists.txt" -Destination "libchess\CMakeLists.txt" -Force -Confirm:$False
 
     - name: Configure libchess build
-      run: cmake -S ${{github.workspace}}/libchess -B ${{github.workspace}}/libchess/build
+      run: cmake -S ${{github.workspace}}/libchess -B ${{github.workspace}}/libchess/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build libchess
       run: cmake --build ${{github.workspace}}/libchess/build --target libchess-static
