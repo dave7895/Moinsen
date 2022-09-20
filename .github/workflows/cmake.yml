@@ -30,6 +30,7 @@ jobs:
         git submodule update --recursive --remote
 
     - name: Get info about file layout
+      if: runner.os == 'Linux'
       run: pwd && ls -lh libchess
 
     - name: Configure libchess build
@@ -40,7 +41,7 @@ jobs:
       
     - name: check file layout on windows
       if: runner.os == 'Windows'
-      run: ls -lh libchess/build/static && tree libchess/build/ --filelimit 13
+      run: dir libchess/build/static
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
