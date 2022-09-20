@@ -33,6 +33,10 @@ jobs:
       if: runner.os == 'Linux'
       run: pwd && ls -lh libchess
 
+    - name: replace libchess CMakeLists
+      if: runner.os == 'Windows'
+      run: copy /y libchessCMakeLists.txt libchess/CMakeLists.txt
+
     - name: Configure libchess build
       run: cmake -S ${{github.workspace}}/libchess -B ${{github.workspace}}/libchess/build
 
