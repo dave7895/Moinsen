@@ -8,8 +8,8 @@ void infopr(const int depth, const int score,
             << " score ";
   bool is_mate = (score > evaluation::mate_threshhold) ||
                  (score < -evaluation::mate_threshhold);
+  const int mate_in_plies = evaluation::mate_score - std::abs(score);
   if (is_mate) {
-    const int mate_in_plies = evaluation::mate_score - std::abs(score);
     const int mate_in_moves = (mate_in_plies + 1) / 2;
     std::cout << "mate " << (score < 0 ? "-" : "") << mate_in_moves;
   } else {
@@ -22,9 +22,10 @@ void infopr(const int depth, const int score,
     if (!move) {
       break;
     }
-    std::cout << static_cast<std::string>(move) << " ";
+    const auto movestr = static_cast<std::string>(move);
+    std::cout << movestr << " ";
     counter++;
-    if (counter >= depth) {
+    if (counter >= depth || (is_mate && counter == mate_in_plies)) {
       break;
     }
   }

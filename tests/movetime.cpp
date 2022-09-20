@@ -9,7 +9,6 @@ TEST_CASE("Search - Movetime") {
 
   std::atomic<bool> stop = false;
   libchess::Position pos("startpos");
-  std::cout << "now inside movetime test" << std::endl;
   for (const auto movetime : movetimes) {
     const auto t0 = std::chrono::steady_clock::now();
     const auto bestmove = search::iterative_deepening(pos, std::chrono::milliseconds(movetime / 20), stop);
@@ -19,7 +18,6 @@ TEST_CASE("Search - Movetime") {
     REQUIRE(dt.count() <= movetime + 50);
     REQUIRE(bestmove != libchess::Move());
   }
-  std::cout << "movetime tests over" << std::endl;
 }
 
 TEST_SUITE_END();

@@ -89,3 +89,24 @@ Rank Name                          Elo     +/-   Games    Wins  Losses   Draws  
    1 FracTal                       647      52    1000     954       1      45    976.5   97.7%    4.5%   97.5%   97.8% 
    2 Moinsen-main                 -132      23    1000     303     665      32    319.0   31.9%    3.2%   33.5%   30.3%
 ```
+
+### 0.0.5
+Add tapered eval, PST still simplified, e.g. only king has differing endgame PST, slightly adjusted piece values
+
+```
+bench
+info depth 1 seldepth 1 score cp 50 time 0 nodes 21 nps 21000 pv b1c3
+info depth 2 seldepth 2 score cp 0 time 0 nodes 421 nps 421000 pv b1c3 b8c6
+info depth 3 seldepth 3 score cp 50 time 17 nodes 9323 nps 548411 pv b1c3 b8c6 g1f3
+info depth 4 seldepth 4 score cp 0 time 121 nodes 206604 nps 1707471 pv b1c3 b8c6 g1f3 g8f6
+info depth 5 seldepth 5 score cp 154 time 2057 nodes 5072213 nps 2465830 pv g1f3 b8c6 f3g5 f7f5 g5e6
+info string 0 0 0 0
+bestmove g1f3
+```
+
+```
+Rank Name                          Elo     +/-   Games    Wins  Losses   Draws   Points   Score    Draw   White   Black
+   0 Moinsen                      -114      18    1600     516    1024      60    546.0   34.1%    3.8%   34.4%   33.9%
+   1 FracTal                       660      61     800     766       1      33    782.5   97.8%    4.1%   97.6%   98.0%
+   2 Moinsen-main                 -116      25     800     258     515      27    271.5   33.9%    3.4%   34.6%   33.3%
+```

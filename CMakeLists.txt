@@ -30,6 +30,7 @@ add_executable(
   tests/koth.cpp
   tests/main.cpp
   tests/movetime.cpp
+  tests/phasedScore.cpp
   tests/position.cpp
   tests/search.cpp
   tests/threecheck.cpp

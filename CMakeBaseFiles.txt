@@ -6,6 +6,7 @@ set(
   src/commontypes.cpp
   src/eval.cpp
   src/info.cpp
+  src/phasedScore.cpp
   src/pst.cpp
   src/search.cpp
   src/eval.hpp

@@ -30,12 +30,12 @@ TEST_CASE("Mate by going into middle") {
       },
   }};
   info::searchInfo sinfo;
-  int depth = 4;
+  int depth = 3;
   std::atomic<bool> stop = false;
   Options opts(kingofthehill);
+  std::vector<libchess::Move> m(depth * depth);
   for (const auto &[fen, movestr] : tests) {
     libchess::Position pos(fen);
-    std::vector<libchess::Move> m;
     INFO(fen);
     INFO(pos.get_fen());
     search::negamax(pos, depth, 0, m, stop, stopT, sinfo, opts);

@@ -5,8 +5,8 @@ namespace evaluation {
 int evaluate_checks(const libchess::Position &pos, const int ply,
                     const Options &opts);
 
-template <libchess::Side us> int evaluate_us(const libchess::Position &pos) {
-  int eval = 0;
+template <libchess::Side us> PhaseScore evaluate_us(const libchess::Position &pos) {
+  PhaseScore eval = 0;
   const auto our = pos.occupancy(us);
   const auto opp = pos.occupancy(!us);
   const auto attacked = pos.squares_attacked(us);
@@ -14,23 +14,23 @@ template <libchess::Side us> int evaluate_us(const libchess::Position &pos) {
 
   const auto pawns = pos.occupancy(libchess::Pawn);
   eval += pieceToVal[0] * (pawns & our).count();
-  eval += pieceToVal[0] / attackDiscount * (pawns & opp & attacked).count();
+  eval += (pieceToVal[0] / attackDiscount * (pawns & opp & attacked).count()) & divMask;
 
   const auto knights = pos.occupancy(libchess::Knight);
   eval += pieceToVal[1] * (knights & our).count();
-  eval += pieceToVal[1] / attackDiscount * (knights & opp & attacked).count();
+  eval += (pieceToVal[1] / attackDiscount * (knights & opp & attacked).count()) & divMask;
 
   const auto bishops = pos.occupancy(libchess::Bishop);
   eval += pieceToVal[2] * (bishops & our).count();
-  eval += pieceToVal[2] / attackDiscount * (bishops & opp & attacked).count();
+  eval += (pieceToVal[2] / attackDiscount * (bishops & opp & attacked).count()) & divMask;
 
   const auto rooks = pos.occupancy(libchess::Rook);
   eval += pieceToVal[3] * (rooks & our).count();
-  eval += pieceToVal[3] / attackDiscount * (rooks & opp & attacked).count();
+  eval += (pieceToVal[3] / attackDiscount * (rooks & opp & attacked).count()) & divMask;
 
   const auto queens = pos.occupancy(libchess::Queen);
   eval += pieceToVal[4] * (queens & our).count();
-  eval += pieceToVal[4] / attackDiscount * (queens & opp & attacked).count();
+  eval += (pieceToVal[4] / attackDiscount * (queens & opp & attacked).count()) & divMask;
 
   eval += evaluatePstSide<us>(pos);
   // bishop pair
@@ -49,29 +49,34 @@ int evaluate(const libchess::Position &pos, const int ply, const Options opts) {
     return contempt;
   }
 
-  int eval = 0;
+  PhaseScore phasedEval = 0;
 
   if (opts.var == threecheck) {
     const auto ceval = evaluate_checks(pos, ply, opts);
-    if (ceval > mate_score) {
+    if (ceval > mate_threshhold || ceval < -mate_threshhold) {
       return pos.turn() == libchess::Side::White ? ceval : -ceval;
     } else {
-      eval += ceval;
+      phasedEval += S(static_cast<int16_t>(ceval), static_cast<int16_t>(ceval));
     }
   } else if (opts.var == kingofthehill) {
     const auto kingInMiddle =
         pos.occupancy(libchess::King) & evaluation::winKOTH;
     if (!kingInMiddle.empty()) {
-      eval = (pos.occupancy(libchess::Side::White) & kingInMiddle).empty()
+      const int eval = (pos.occupancy(libchess::Side::White) & kingInMiddle).empty()
                  ? -mate_score + ply
                  : mate_score - ply;
       return pos.turn() == libchess::Side::White ? eval : -eval;
     }
   }
 
-  eval += evaluate_us<libchess::Side::White>(pos);
-  eval -= evaluate_us<libchess::Side::Black>(pos);
-  int perspectiveEval = pos.turn() == libchess::Side::White ? eval : -eval;
+  phasedEval += evaluate_us<libchess::Side::White>(pos);
+  phasedEval -= evaluate_us<libchess::Side::Black>(pos);
+  constexpr int maxPhase = 24;
+  const int gamePhase = std::min(getPhase(pos), maxPhase);
+  const int midgame = mgScore(phasedEval);
+  const int endgame = egScore(phasedEval);
+  const int tapered = (midgame * gamePhase + (24 - gamePhase) * endgame) / maxPhase;
+  const int perspectiveEval = pos.turn() == libchess::Side::White ? tapered : -tapered;
   return perspectiveEval + pos.in_check();
 }
 
