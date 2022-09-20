@@ -1,5 +1,13 @@
 set( CMAKE_CXX_STANDARD 20 )
+
+if (UNIX)
 set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -march=native -O3 -flto=2" )
+endif
+
+if (MSVC)
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} /O2")
+endif
+
 set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -g" )
 set(
   SRC_FILES
