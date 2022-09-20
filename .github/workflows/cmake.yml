@@ -24,6 +24,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Get info about file layout
+      run: pwd && ls -lh libchess
+
     - name: Configure libchess build
       run: cmake -S ${{github.workspace}}/libchess -B ${{github.workspace}}/libchess/build
 
