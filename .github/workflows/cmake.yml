@@ -41,7 +41,7 @@ jobs:
       run: cmake -S ${{github.workspace}}/libchess -B ${{github.workspace}}/libchess/build
 
     - name: Build libchess
-      run: cmake --build ${{github.workspace}}/libchess/build --target
+      run: cmake --build ${{github.workspace}}/libchess/build --target libchess-static
       
     - name: check file layout on windows
       if: runner.os == 'Windows'
