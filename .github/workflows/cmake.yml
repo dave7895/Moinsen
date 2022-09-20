@@ -67,7 +67,7 @@ jobs:
     - name: Perft
       working-directory: ${{github.workspace}}\build\${{env.BUILD_TYPE}}
       if: runner.os == 'Windows'
-      run: dir && dir .. && Moinsen bench
+      run: dir && dir .. && ./Moinsen.exe bench
 
     - name: Build
       # Build your program with the given configuration
