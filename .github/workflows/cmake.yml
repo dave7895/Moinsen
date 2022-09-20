@@ -44,7 +44,7 @@ jobs:
       run: cmake -S ${{github.workspace}}/libchess -B ${{github.workspace}}/libchess/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build libchess
-      run: cmake --build ${{github.workspace}}/libchess/build --target libchess-static
+      run: cmake --build ${{github.workspace}}/libchess/build --target libchess-static --config Release
       
     - name: check file layout on windows
       if: runner.os == 'Windows'
@@ -57,7 +57,7 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --config Release
 
     - name: Test
       working-directory: ${{github.workspace}}/build
