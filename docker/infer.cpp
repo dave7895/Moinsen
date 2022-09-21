@@ -9,24 +9,6 @@
 
 namespace gcf = ::google::cloud::functions;
 
-std::string extract_std_fen(std::string fen, Options &opts) {
-  std::string collect;
-  std::string placeholder;
-  opts.move = 0;
-  std::stringstream sstr{fen};
-  while (sstr >> placeholder) {
-    if (placeholder[1] != '+') {
-      if (!collect.empty()) {
-        collect += " ";
-      }
-      collect += placeholder;
-    } else {
-      opts.counts.first = static_cast<uint16_t>('3' - placeholder[0]);
-      opts.counts.second = '3' - placeholder[2];
-    }
-  }
-  return collect;
-}
 
 gcf::HttpResponse infer(gcf::HttpRequest request) {
   std::string fen;
