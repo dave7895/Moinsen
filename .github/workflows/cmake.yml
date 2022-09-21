@@ -27,11 +27,13 @@ jobs:
         config:
           - {
             os: ubuntu-22.04,
-            compiler: g++
+            compiler: g++,
+            generator: "Unix Makefiles"
           }
           - {
             os: windows-latest,
-            compiler: x86_64-w64-mingw32-c++
+            compiler: x86_64-w64-mingw32-c++,
+            generator: "MinGW Makefiles"
           }
     
     steps:
@@ -47,7 +49,7 @@ jobs:
       run: Copy-Item "libchessCMakeLists.txt" -Destination "libchess\CMakeLists.txt" -Force -Confirm:$False
 
     - name: Configure libchess build
-      run: cmake -S ${{github.workspace}}/libchess -B ${{github.workspace}}/libchess/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -S ${{github.workspace}}/libchess -B ${{github.workspace}}/libchess/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G ${{ matrix.config.generator }}
 
     - name: Build libchess
       run: cmake --build ${{github.workspace}}/libchess/build --target libchess-static --config ${{env.BUILD_TYPE}} -j 2
@@ -55,7 +57,7 @@ jobs:
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G ${{ matrix.config.generator }}
 
     - name: Build main executable
       # Build your program with the given configuration
