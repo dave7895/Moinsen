@@ -44,7 +44,7 @@ RUN ls -lh
 RUN ls -lh libchess
 RUN git clone https://github.com/kz04px/libchess
 RUN cmake -S/v/source/libchess -B/v/source/libchess/build -GNinja -DCMAKE_BUILD_TYPE=Release
-RUN cmake --build /v/source/libchess/build
+RUN cmake --build /v/source/libchess/build --target libchess-static
 RUN mv /v/source/docker/* /v/source/
 # Run the CMake configuration step, setting the options to create
 # a statically linked C++ program
