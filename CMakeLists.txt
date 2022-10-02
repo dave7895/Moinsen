@@ -51,6 +51,13 @@ add_executable(
 )
 target_link_libraries( test-${PROJECT_NAME} PRIVATE libchess Threads::Threads)
 
+add_executable(
+  tune-${PROJECT_NAME}
+  src/tune.cpp
+  ${SRC_FILES}
+)
+target_link_libraries( tune-${PROJECT_NAME} PRIVATE libchess Threads::Threads "-ltbb")
+
 include(CTest)
 
 add_test(NAME Tests 
