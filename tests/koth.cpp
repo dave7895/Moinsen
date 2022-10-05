@@ -10,6 +10,8 @@
 TEST_SUITE_BEGIN("koth");
 using pair_type = std::pair<std::string, std::string>;
 const auto stopT = std::chrono::system_clock::now() + std::chrono::hours(1);
+std::vector<std::vector<libchess::Move>> moveSt;
+
 TEST_CASE("Mate by going into middle") {
   const std::array<pair_type, 4> tests = {{
       {
@@ -38,7 +40,7 @@ TEST_CASE("Mate by going into middle") {
     libchess::Position pos(fen);
     INFO(fen);
     INFO(pos.get_fen());
-    search::negamax(pos, depth, 0, m, stop, stopT, sinfo, opts);
+    search::negamax(pos, depth, 0, m, stop, stopT, sinfo, moveSt, opts);
     REQUIRE(static_cast<std::string>(m[0]) == movestr);
   }
 }

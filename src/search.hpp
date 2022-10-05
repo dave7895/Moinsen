@@ -9,10 +9,12 @@
 #include <limits>
 
 namespace search {
-int negamax(libchess::Position &pos, int depth, int ply,
+int negamax(libchess::Position &pos, int depth, const unsigned int ply,
             std::vector<libchess::Move> &returnMove, std::atomic_bool &stop,
             const std::chrono::time_point<std::chrono::system_clock> &stopTime,
-            info::searchInfo &sInfo, const Options opts = Options(0));
+            info::searchInfo &sInfo,
+            std::vector<std::vector<libchess::Move>> &moveStack,
+            const Options opts = Options(0));
 // TODO add int by ref to access eval
 libchess::Move iterative_deepening(libchess::Position &pos,
                                    const std::chrono::milliseconds minTime,

@@ -7,6 +7,7 @@
 TEST_SUITE_BEGIN("Search");
 using pair_type = std::pair<std::string, std::string>;
 const auto stopT = std::chrono::system_clock::now() + std::chrono::hours(1);
+std::vector<std::vector<libchess::Move>> moveStack;
 info::searchInfo sInfo;
 TEST_CASE("Mate in one") {
   const std::array<pair_type, 4> tests = {{
@@ -20,7 +21,7 @@ TEST_CASE("Mate in one") {
   std::vector<libchess::Move> m(depth * depth);
   for (const auto &[fen, movestr] : tests) {
     libchess::Position pos(fen);
-    search::negamax(pos, depth, 0, m, stop, stopT, sInfo);
+    search::negamax(pos, depth, 0, m, stop, stopT, sInfo, moveStack);
     REQUIRE(static_cast<std::string>(m[0]) == movestr);
   }
 }
@@ -38,10 +39,10 @@ TEST_CASE("Search - Checkmate with castling") {
   std::vector<libchess::Move> m(depth * depth);
   for (const auto &[fen, movestr] : tests) {
     libchess::Position pos(fen);
-    const int eval = search::negamax(pos, depth, 0, m, stop, stopT, sInfo);
+    const int eval = search::negamax(pos, depth, 0, m, stop, stopT, sInfo, moveStack);
     INFO(fen);
     INFO("eval ", eval);
-    REQUIRE(static_cast<std::string>(m[0]) == movestr);
+    REQUIRE(/*static_cast<std::string>(*/m[0] == pos.parse_move(movestr));
   }
 }
 
