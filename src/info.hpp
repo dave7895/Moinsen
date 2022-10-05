@@ -6,7 +6,7 @@
 #include <libchess/move.hpp>
 namespace info {
 struct searchInfo {
-  int seldepth;
+  unsigned int seldepth;
   long nodecount;
 
   searchInfo(int seldep = 0, long nodec = 0)

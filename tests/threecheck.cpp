@@ -8,6 +8,7 @@
 TEST_SUITE_BEGIN("3check");
 using pair_type = std::pair<std::string, std::string>;
 const auto stopT = std::chrono::system_clock::now() + std::chrono::hours(1);
+std::vector<std::vector<libchess::Move>> moveS;
 
 TEST_CASE("Mate by 3 checks, one remaining") {
   const std::array<pair_type, 4> tests = {{
@@ -29,7 +30,7 @@ TEST_CASE("Mate by 3 checks, one remaining") {
     INFO(fen);
     INFO(pos.get_fen());
     INFO("given checks: w ", +opts.counts.first, " b ", +opts.counts.second);
-    search::negamax(pos, depth, 0, m, stop, stopT, sinfo, opts);
+    search::negamax(pos, depth, 0, m, stop, stopT, sinfo, moveS, opts);
     REQUIRE(static_cast<std::string>(m[0]) == movestr);
   }
 }

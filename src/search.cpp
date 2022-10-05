@@ -12,22 +12,30 @@ bool isterminal(libchess::Position pos, const Options opts) {
   return false;
 }
 
-int negamax(libchess::Position &pos, int depth, int ply,
+int negamax(libchess::Position &pos, int depth, const unsigned int ply,
             std::vector<libchess::Move> &returnMove, std::atomic_bool &stop,
             const std::chrono::time_point<std::chrono::system_clock> &stopTime,
-            info::searchInfo &sInfo, const Options opts) {
+            info::searchInfo &sInfo,
+            std::vector<std::vector<libchess::Move>> &moveStack,
+            const Options opts) {
   // std::cout << "fen " << pos.get_fen() << std::endl;
   sInfo.nodecount++;
   if (ply > sInfo.seldepth) {
     sInfo.seldepth = ply;
   }
-  if (depth <= 0 || pos.legal_moves().empty() || isterminal(pos, opts)) {
+  while (moveStack.size() <= ply) {
+    moveStack.emplace_back();
+    moveStack.back().reserve(150);
+  }
+  if (depth <= 0 || isterminal(pos, opts)) {
     return evaluation::evaluate(pos, ply, opts);
   } else if (pos.fiftymoves() || pos.threefold()) {
     return evaluation::contempt;
   }
   int topEval = std::numeric_limits<int>::min();
-  auto moves = pos.legal_moves();
+  auto moves = moveStack[ply];
+  moves.clear();
+  pos.legal_moves(moves);
   const int N = depth + ply;
   const int PVzeroOffset = ply * (2 * N + 1 - ply) / 2;
   for (const auto &move : moves) {
@@ -40,7 +48,7 @@ int negamax(libchess::Position &pos, int depth, int ply,
     }
     pos.makemove(move);
     auto eval = -negamax(pos, depth - 1, ply + 1, returnMove, stop, stopTime,
-                         sInfo, opts);
+                         sInfo, moveStack, opts);
     pos.undomove();
     if (eval > topEval) {
       topEval = eval;
@@ -53,20 +61,26 @@ int negamax(libchess::Position &pos, int depth, int ply,
   return topEval;
 }
 
+// TODO: add vec of vecs to not allocate movelist in tight loop
+
 libchess::Move iterative_deepening(libchess::Position &pos,
                                    const std::chrono::milliseconds minTime,
                                    std::atomic_bool &stop, const Options opts) {
   int depth = 0;
-  std::vector<libchess::Move> top_move = {pos.legal_moves()[0]};
+  std::vector<std::vector<libchess::Move>> moveStack(4, {pos.legal_moves()});
+  std::vector<libchess::Move> top_move = {moveStack[0][0]};
   libchess::Move old_top_move;
   int score;
   const auto starttime = std::chrono::system_clock::now();
   const auto breakTime = starttime + (3 * minTime / 2);
   while ((std::chrono::system_clock::now() - starttime) < minTime && !stop) {
     depth++;
+    moveStack.emplace_back();
+    // moveStack.back().reserve(200);
     std::vector<libchess::Move> newPV((depth * depth + depth) / 2);
     info::searchInfo sInfo;
-    score = negamax(pos, depth, 0, newPV, stop, breakTime, sInfo, opts);
+    score =
+        negamax(pos, depth, 0, newPV, stop, breakTime, sInfo, moveStack, opts);
     if (!stop) {
       top_move = newPV;
       long time = std::chrono::duration_cast<std::chrono::milliseconds>(

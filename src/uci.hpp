@@ -1,7 +1,7 @@
 #ifndef UCI_HPP
 #define UCI_HPP
-#include "search.hpp"
 #include "commontypes.hpp"
+#include "search.hpp"
 #include <sstream>
 #include <string>
 #include <thread>
@@ -24,7 +24,8 @@ void main_loop() {
   std::cout << "id author dave7895\n";
 
   std::cout << "\n";
-  std::cout << "option name UCI_Variant type combo default chess var 3check var chess var kingofthehill\n";
+  std::cout << "option name UCI_Variant type combo default chess var 3check "
+               "var chess var kingofthehill\n";
 
   std::cout << "uciok\n";
   for (;;) {
@@ -65,7 +66,7 @@ void main_loop() {
       go(strstr, pos, opts);
     } else if (word == "stop") {
       stop();
-    } else if (word == "setoption"){
+    } else if (word == "setoption") {
       setoptions(strstr, opts);
     }
   }
@@ -112,7 +113,7 @@ void go(std::stringstream &sstr, libchess::Position &pos, const Options &opts) {
   int ms_available = 0;
   int inc_ms = 0;
   bool depthFixed = false;
-  int depth;
+  int depth = 0;
   auto us = pos.turn();
   std::string us_string = us == libchess::White ? "w" : "b";
   while (!sstr.eof()) {
@@ -146,11 +147,13 @@ void go(std::stringstream &sstr, libchess::Position &pos, const Options &opts) {
   }
   if (depthFixed) {
     auto start = system_clock::now();
-    std::vector<libchess::Move> retMove(depth);
+    std::vector<libchess::Move> retMove(depth * depth);
     time = hours(1);
     info::searchInfo sInfo;
-    int score =
-        search::negamax(pos, depth, 0, retMove, stopv, start + time, sInfo, opts);
+    std::vector<std::vector<libchess::Move>> moveStack(depth,
+                                                       pos.legal_moves());
+    int score = search::negamax(pos, depth, 0, retMove, stopv, start + time,
+                                sInfo, moveStack, opts);
     const std::chrono::milliseconds elapsed =
         std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start);
@@ -173,20 +176,20 @@ void stop() {
   stopv = false;
 }
 
-void setoptions(std::stringstream &sstr, Options &opts){
+void setoptions(std::stringstream &sstr, Options &opts) {
   std::string placeholder;
-	std::string name;
-	std::string value;
-	sstr >> placeholder >> name >> placeholder >> value;
-  if (name.empty() || value.empty()){
+  std::string name;
+  std::string value;
+  sstr >> placeholder >> name >> placeholder >> value;
+  if (name.empty() || value.empty()) {
     return;
   }
-  if (name == "UCI_Variant"){
-    if (value == "chess"){
+  if (name == "UCI_Variant") {
+    if (value == "chess") {
       opts.var = chess;
-    } else if (value == "3check"){
+    } else if (value == "3check") {
       opts.var = threecheck;
-    } else if (value == "kingofthehill"){
+    } else if (value == "kingofthehill") {
       opts.var = kingofthehill;
     }
   }
