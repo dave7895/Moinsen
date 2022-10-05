@@ -24,6 +24,7 @@ void main_loop() {
   std::cout << "id author dave7895\n";
 
   std::cout << "\n";
+  std::cout << "option name UCI_Chess960 type check default false\n";
   std::cout << "option name UCI_Variant type combo default chess var 3check "
                "var chess var kingofthehill\n";
 
