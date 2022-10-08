@@ -16,27 +16,27 @@ PhaseScore evaluate_us(const libchess::Position &pos,
   const int attackDiscount = 8;
 
   const auto pawns = pos.occupancy(libchess::Pawn);
-  eval += pVal[0] * (pawns & our).count();
+  // eval += pVal[0] * (pawns & our).count();
   eval +=
       (pVal[0] / attackDiscount * (pawns & opp & attacked).count()) & divMask;
 
   const auto knights = pos.occupancy(libchess::Knight);
-  eval += pVal[1] * (knights & our).count();
+  // eval += pVal[1] * (knights & our).count();
   eval +=
       (pVal[1] / attackDiscount * (knights & opp & attacked).count()) & divMask;
 
   const auto bishops = pos.occupancy(libchess::Bishop);
-  eval += pVal[2] * (bishops & our).count();
+  // eval += pVal[2] * (bishops & our).count();
   eval +=
       (pVal[2] / attackDiscount * (bishops & opp & attacked).count()) & divMask;
 
   const auto rooks = pos.occupancy(libchess::Rook);
-  eval += pVal[3] * (rooks & our).count();
+  // eval += pVal[3] * (rooks & our).count();
   eval +=
       (pVal[3] / attackDiscount * (rooks & opp & attacked).count()) & divMask;
 
   const auto queens = pos.occupancy(libchess::Queen);
-  eval += pVal[4] * (queens & our).count();
+  // eval += pVal[4] * (queens & our).count();
   eval +=
       (pVal[4] / attackDiscount * (queens & opp & attacked).count()) & divMask;
 

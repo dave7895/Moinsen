@@ -1,5 +1,6 @@
 #include <array>
 #include <cstdint>
+#include "phasedScore.hpp"
 // clang-format off
 
 constexpr std::array<int16_t, 64*6> mg_table = {{
@@ -114,6 +115,15 @@ constexpr std::array<int16_t, 64*6> eg_table = {{
 -36, -17,  11,  12,   8,   8, -23, -11, 
 -60, -21, -25, -18, -31, -24, -35, -70, 
 
+}};
+
+constexpr std::array<int, 6> pieceVal = {{
+    S(100, 110),
+    S(326, 320),
+    S(356, 334),
+    S(523, 543),
+    S(976, 991),
+    S(-1, 8),
 }};
 
 // clang-format on
