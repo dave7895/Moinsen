@@ -8,10 +8,15 @@ constexpr std::array<PhaseScore, 64 * 6> init_table() {
                  compound_table.begin(), [](const int a, const int b) {
                    return S(static_cast<int16_t>(a), static_cast<int16_t>(b));
                  });
+  for (int i = 0; i < 6; i++) {
+    for (int j = 0; j < 64; j++) {
+      compound_table[i * 64 + j] += pieceVal[i];
+    }
+  }
   return compound_table;
 }
 
-const std::array<PhaseScore, 64 * 6> final_table = init_table();
+constexpr std::array<PhaseScore, 64 * 6> final_table = init_table();
 
 template <libchess::Piece piece>
 PhaseScore pstValue(const libchess::Square &sq,

@@ -191,7 +191,7 @@ std::array<int, 64 * 6> localOptimize(
 
 int main(int argc, char const *argv[]) {
   auto opt = compound_table;
-  const auto optpVal = evaluation::pieceVal;
+  const auto optpVal = pieceVal;
   if (argc > 1) {
     std::string path{argv[1]};
     std::vector<fen_pair> fenData = readDatafile(path);
