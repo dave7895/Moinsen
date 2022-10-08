@@ -10,7 +10,7 @@ PhaseScore evaluate_us(const libchess::Position &pos,
                        const std::array<PhaseScore, 64 * 6> &ftable,
                        const std::array<PhaseScore, 6> &pVal) {
   PhaseScore eval = 0;
-  const auto our = pos.occupancy(us);
+  // const auto our = pos.occupancy(us);
   const auto opp = pos.occupancy(!us);
   const auto attacked = pos.squares_attacked(us);
   const int attackDiscount = 8;
