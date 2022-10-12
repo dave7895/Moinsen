@@ -1,3 +1,13 @@
+# Tuning data files
+*.pgn
+*positions.epd
+
+# Julia Manifest, Project suffices
+Manifest.toml
+
+# handfull of scripts to compare smaller versions
+elotestscripts/
+
 # Prerequisites
 *.d
 
