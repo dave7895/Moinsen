@@ -1,3 +1,6 @@
 [deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 Chess = "717200cc-f167-4fd3-b4bf-b5e480529844"
+Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
