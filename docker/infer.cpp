@@ -28,7 +28,7 @@ gcf::HttpResponse infer(gcf::HttpRequest request) {
     } else if (varname == "3check" || varname == "threecheck") {
       opts.var = threecheck;
     } else if (varname == "kingofthehill" || varname == "koth") {
-      opts.var = threecheck;
+      opts.var = kingofthehill;
     }
     std::getline(sstr, fen);
     sstr >> availableTime;
