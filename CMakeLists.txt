@@ -50,6 +50,10 @@ add_executable(
   ${SRC_FILES}
 )
 target_link_libraries( test-${PROJECT_NAME} PRIVATE libchess Threads::Threads)
+set_target_properties(test-${PROJECT_NAME} PROPERTIES LINK_SEARCH_START_STATIC ON)
+set_target_properties(test-${PROJECT_NAME} PROPERTIES LINK_SEARCH_END_STATIC ON)
+target_compile_features(test-${PROJECT_NAME} PRIVATE cxx_std_20)
+target_link_options(test-${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++ -static)
 
 add_executable(
   tune-${PROJECT_NAME}
